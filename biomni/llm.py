@@ -1,5 +1,5 @@
 import os
-from typing import List, Literal, Optional
+from typing import Literal, Optional
 
 from langchain_anthropic import ChatAnthropic
 from langchain_core.language_models.chat_models import BaseChatModel
@@ -12,7 +12,7 @@ SourceType = Literal["OpenAI", "AzureOpenAI", "Anthropic", "Ollama"]
 def get_llm(
     model: str = "claude-3-5-sonnet-20241022",
     temperature: float = 0.7,
-    stop_sequences: Optional[List[str]] = None,
+    stop_sequences: Optional[list[str]] = None,
     source: Optional[SourceType] = None,
 ) -> BaseChatModel:
     """
