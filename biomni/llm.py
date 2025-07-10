@@ -12,8 +12,8 @@ SourceType = Literal["OpenAI", "AzureOpenAI", "Anthropic", "Ollama"]
 def get_llm(
     model: str = "claude-3-5-sonnet-20241022",
     temperature: float = 0.7,
-    stop_sequences: Optional[list[str]] = None,
-    source: Optional[SourceType] = None,
+    stop_sequences: list[str] | None = None,
+    source: SourceType | None = None,
 ) -> BaseChatModel:
     """
     Get a language model instance based on the specified model name and source.
