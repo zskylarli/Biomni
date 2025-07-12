@@ -23,13 +23,7 @@ description = [
                 "description": "Transferred cell type composition for each cluster",
                 "name": "composition",
                 "type": "pd.DataFrame",
-            },
-            {
-                "default": "/dfs/project/bioagentos/data_lake",
-                "description": "Path to the data lake",
-                "name": "DATA_LAKE",
-                "type": "str",
-            },
+            }
         ],
         "required_parameters": [
             {
@@ -50,6 +44,12 @@ description = [
                 "name": "data_info",
                 "type": "str",
             },
+            {
+                "default": None,
+                "description": "Path to the data lake",
+                "name": "data_lake_path",
+                "type": "str",
+            }
         ],
     },
     {

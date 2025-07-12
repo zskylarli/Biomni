@@ -181,12 +181,13 @@ def run_autosite(pdb_file, output_dir, spacing=1.0):
 
 
 # Function to get TxGNN predictions and return a summarized string output
-def retrieve_topk_repurposing_drugs_from_disease_txgnn(disease_name, k=5):
+def retrieve_topk_repurposing_drugs_from_disease_txgnn(disease_name, data_lake_path, k=5):
     """This function computes TxGNN model predictions for drug repurposing. It takes in the paths to the data,
     the disease name, and returns a summary of the top K predicted drugs with their sigmoid-transformed scores.
 
     Args:
     - disease_name (str): The name of the disease for which the drug predictions are to be retrieved.
+    - data_lake_path (str): The path to the data lake containing the TxGNN predictions.
     - k (int, optional): The number of top drug predictions to return. Defaults to 5.
 
     Returns:
@@ -199,10 +200,13 @@ def retrieve_topk_repurposing_drugs_from_disease_txgnn(disease_name, k=5):
         return 1 / (1 + np.exp(-x))
 
     # Step 1: Load the mappings and prediction data from the provided paths
-    with open("/dfs/project/bioagentos/required_data/txgnn/name_mapping.pkl", "rb") as f:
+    name_mapping_path = data_lake_path + "/txgnn_name_mapping.pkl"
+    result_path = data_lake_path + "/txgnn_prediction.pkl"
+
+    with open(name_mapping_path, "rb") as f:
         mapping = pickle.load(f)
 
-    with open("/dfs/project/bioagentos/required_data/txgnn/prediction.pkl", "rb") as f:
+    with open(result_path, "rb") as f:
         result = pickle.load(f)
 
     # Step 2: Fuzzy match the disease name to find the closest match

@@ -33,7 +33,7 @@ data_lake_dict = {
     "gwas_catalog.pkl": "Genome-wide association studies (GWAS) results.",
     "GDPx2_ProcessedData_GSEA-HallmarkGenes.csv": "GSEA results of MSigDB Hallmark gene sets for all GDPx2 clusters/conditions.",
     "GDPx2_ProcessedData_GSEA-HDACInhibitors.csv": "GSEA results focused on HDAC-inhibitor response signatures in GDPx2.",
-    # "GDPx2_ProcessedData_SupplementaryTable6-DifferentialExpression.csv" : "Full differential-expression table (all genes and all perturbations) — Supplementary Table 6.",
+    "GDPx2_ProcessedData_SupplementaryTable6-DifferentialExpression.csv" : "Full differential-expression table (all genes and all perturbations) — Supplementary Table 6.",
     "GDPx2_ProcessedData_SupplementaryTable8-DoseResponse.csv": "Dose-response summary for each compound/perturbation — Supplementary Table 8.",
     "GDPx2_annotations_ClusterMemberships.csv": "Cell- or sample-level cluster assignments produced from GDPx2 analysis.",
     "GDPx2_annotations_CompoundLibrary.csv": "Lookup table of compounds (ID, name, MoA, concentration) used in the GDPx2 screen.",
