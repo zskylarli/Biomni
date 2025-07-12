@@ -34,16 +34,22 @@ Tools are implemented as Python functions in `biomni/tool/XXX.py`, organized by 
 
 ### 📊 Adding New Data
 
-**Requirements:**
-- Data must not overlap with existing datasets
-- Must have proper redistribution rights
-- Accessible download link required
+If the data source has web API, follow this process:
+
+**Steps:**
+1. **Verify uniqueness** - ensure no overlap with existing data
+2. **Prepare download link** with verified redistribution rights
+3. **Add a new query_XX function** to `biomni/tool/database.py`, follow the format from the other functions.
+
+If the data source has no API access, follow the below process:
 
 **Steps:**
 1. **Verify uniqueness** - ensure no overlap with existing data
 2. **Prepare download link** with verified redistribution rights
 3. **Add entry** to `data_lake_dict` in `biomni/env_desc.py`
 4. **Submit a pull request** with the download link
+
+Then, make a PR.
 
 ### 💻 Adding New Software
 
@@ -92,6 +98,8 @@ class YourBenchmark:
 ### 🐛 Bug Fixes & Enhancements
 
 We welcome all bug fixes and enhancements to the existing codebase!
+
+**Create an issue to discuss with the Biomni team first.**
 
 **Guidelines:**
 - Clearly describe the issue or enhancement
