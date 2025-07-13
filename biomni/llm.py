@@ -1,7 +1,7 @@
 import os
-import openai
 from typing import Literal, Optional
 
+import openai
 from langchain_anthropic import ChatAnthropic
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -81,7 +81,7 @@ def get_llm(
     elif source == "Custom":
         # Custom LLM serving such as SGLang. Must expose an openai compatible API.
         assert base_url is not None, "base_url must be provided for customly served LLMs"
-        llm = ChatOpenAI(model = model, temperature = temperature, max_tokens = 8192, stop_sequences = stop_sequences)
+        llm = ChatOpenAI(model=model, temperature=temperature, max_tokens=8192, stop_sequences=stop_sequences)
         llm.client = openai.Client(base_url=base_url, api_key=api_key).chat.completions
         return llm
     else:
