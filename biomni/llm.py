@@ -1,4 +1,5 @@
 import os
+import openai
 from typing import Literal, Optional
 
 from langchain_anthropic import ChatAnthropic
@@ -7,9 +8,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_ollama import ChatOllama
 from langchain_openai import AzureChatOpenAI, ChatOpenAI
 
-SourceType = Literal["OpenAI", "AzureOpenAI", "Anthropic", "Ollama", "Gemini"]
-
-SourceType = Literal["OpenAI", "AzureOpenAI", "Anthropic", "Ollama"]
+SourceType = Literal["OpenAI", "AzureOpenAI", "Anthropic", "Ollama", "Gemini", "Custom"]
 
 
 def get_llm(
@@ -17,17 +16,21 @@ def get_llm(
     temperature: float = 0.7,
     stop_sequences: list[str] | None = None,
     source: SourceType | None = None,
+    base_url: str | None = None,
+    api_key: str = "EMPTY",
 ) -> BaseChatModel:
     """
     Get a language model instance based on the specified model name and source.
-    This function supports models from OpenAI, Azure OpenAI, Anthropic, and Ollama.
+    This function supports models from OpenAI, Azure OpenAI, Anthropic, Ollama, Gemini, and custom model serving.
 
     Args:
         model (str): The model name to use
         temperature (float): Temperature setting for generation
         stop_sequences (list): Sequences that will stop generation
-        source (str): Source provider: "OpenAI", "AzureOpenAI", "Anthropic", or "Ollama"
+        source (str): Source provider: "OpenAI", "AzureOpenAI", "Anthropic", "Ollama", "Gemini", or "Custom"
                       If None, will attempt to auto-detect from model name
+        base_url (str): The base URL for custom model serving (e.g., "http://localhost:8000/v1"), default is None
+        api_key (str): The API key for the custom llm
     """
     # Auto-detect source from model name if not specified
     if source is None:
@@ -37,6 +40,8 @@ def get_llm(
             source = "OpenAI"
         elif model[:7] == "gemini-":
             source = "Gemini"
+        elif base_url is not None:
+            source = "Custom"
         elif "/" in model or any(
             name in model.lower() for name in ["llama", "mistral", "qwen", "gemma", "phi", "dolphin", "orca", "vicuna"]
         ):
@@ -73,6 +78,12 @@ def get_llm(
             model=model,
             temperature=temperature,
         )
+    elif source == "Custom":
+        # Custom LLM serving such as SGLang. Must expose an openai compatible API.
+        assert base_url is not None, "base_url must be provided for customly served LLMs"
+        llm = ChatOpenAI(model = model, temperature = temperature, max_tokens = 8192, stop_sequences = stop_sequences)
+        llm.client = openai.Client(base_url=base_url, api_key=api_key).chat.completions
+        return llm
     else:
         raise ValueError(
             f"Invalid source: {source}. Valid options are 'OpenAI', 'AzureOpenAI', 'Anthropic', 'Gemini', or 'Ollama'"
