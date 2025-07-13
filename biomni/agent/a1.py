@@ -41,6 +41,8 @@ class A1:
         llm="claude-sonnet-4-20250514",
         use_tool_retriever=True,
         timeout_seconds=600,
+        base_url: str | None = None,
+        api_key: str = "EMPTY",
     ):
         """Initialize the biomni agent.
 
@@ -48,6 +50,9 @@ class A1:
             path: Path to the data
             llm: LLM to use for the agent
             use_tool_retriever: If True, use a tool retriever
+            timeout_seconds: Timeout for code execution in seconds
+            base_url: Base URL for custom model serving (e.g., "http://localhost:8000/v1")
+            api_key: API key for the custom LLM
 
         """
         self.path = path
@@ -94,7 +99,7 @@ class A1:
         self.path = os.path.join(path, "biomni_data")
         module2api = read_module2api()
 
-        self.llm = get_llm(llm, stop_sequences=["</execute>", "</solution>"])
+        self.llm = get_llm(llm, stop_sequences=["</execute>", "</solution>"], base_url=base_url, api_key=api_key)
         self.module2api = module2api
         self.use_tool_retriever = use_tool_retriever
 
