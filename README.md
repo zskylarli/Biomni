@@ -58,6 +58,8 @@ Lastly, configure your API keys in bash profile `~/.bashrc`:
 ```bash
 export ANTHROPIC_API_KEY="YOUR_API_KEY"
 export OPENAI_API_KEY="YOUR_API_KEY" # optional if you just use Claude
+export AWS_BEARER_TOKEN_BEDROCK="YOUR_BEDROCK_API_KEY" # optional for AWS Bedrock models
+export AWS_REGION="us-east-1" # optional, defaults to us-east-1 for Bedrock
 ```
 
 ### Basic Usage
