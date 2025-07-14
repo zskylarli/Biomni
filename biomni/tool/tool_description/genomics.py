@@ -24,12 +24,6 @@ description = [
                 "name": "composition",
                 "type": "pd.DataFrame",
             },
-            {
-                "default": "/dfs/project/bioagentos/data_lake",
-                "description": "Path to the data lake",
-                "name": "DATA_LAKE",
-                "type": "str",
-            },
         ],
         "required_parameters": [
             {
@@ -48,6 +42,12 @@ description = [
                 "default": None,
                 "description": 'Information about the scRNA-seq data (e.g., "homo sapiens, brain tissue, normal")',
                 "name": "data_info",
+                "type": "str",
+            },
+            {
+                "default": None,
+                "description": "Path to the data lake",
+                "name": "data_lake_path",
                 "type": "str",
             },
         ],
