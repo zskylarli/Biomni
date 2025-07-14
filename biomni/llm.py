@@ -1,14 +1,16 @@
 import os
 from typing import Literal, Optional
+
 import openai
 from langchain_anthropic import ChatAnthropic
+from langchain_aws import ChatBedrock
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_ollama import ChatOllama
 from langchain_openai import AzureChatOpenAI, ChatOpenAI
-from langchain_aws import ChatBedrock
 
 SourceType = Literal["OpenAI", "AzureOpenAI", "Anthropic", "Ollama", "Gemini", "Bedrock", "Custom"]
+
 
 def get_llm(
     model: str = "claude-3-5-sonnet-20241022",
@@ -44,11 +46,13 @@ def get_llm(
             name in model.lower() for name in ["llama", "mistral", "qwen", "gemma", "phi", "dolphin", "orca", "vicuna"]
         ):
             source = "Ollama"
-        elif model.startswith(('anthropic.claude-', 'amazon.titan-', 'meta.llama-', 'mistral.', 'cohere.', 'ai21.', 'us.')):
+        elif model.startswith(
+            ("anthropic.claude-", "amazon.titan-", "meta.llama-", "mistral.", "cohere.", "ai21.", "us.")
+        ):
             source = "Bedrock"
         else:
             raise ValueError("Unable to determine model source. Please specify 'source' parameter.")
-    
+
     # Create appropriate model based on source
     if source == "OpenAI":
         return ChatOpenAI(model=model, temperature=temperature, stop_sequences=stop_sequences)
@@ -83,7 +87,7 @@ def get_llm(
             model=model,
             temperature=temperature,
             stop_sequences=stop_sequences,
-            region_name=os.getenv("AWS_REGION", "us-east-1")
+            region_name=os.getenv("AWS_REGION", "us-east-1"),
         )
     elif source == "Custom":
         # Custom LLM serving such as SGLang. Must expose an openai compatible API.
