@@ -41,13 +41,17 @@ Then activate the environment E1:
 conda activate biomni_e1
 ```
 
-then install the latest biomni package:
+then install the biomni official pip package:
 
 ```bash
 pip install biomni --upgrade
 ```
 
-Or install from the github source version.
+For the latest update, install from the github source version, or do:
+
+```bash
+pip install git+https://github.com/snap-stanford/Biomni.git@main
+```
 
 Lastly, configure your API keys in bash profile `~/.bashrc`:
 
