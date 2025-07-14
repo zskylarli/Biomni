@@ -31,3 +31,5 @@ dependencies:
       - notebook
       - ipykernel
       - pytest
+      - transformers
+      - sentencepiece
