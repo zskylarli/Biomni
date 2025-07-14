@@ -16,8 +16,10 @@ Before contributing, please ensure you:
 Tools are implemented as Python functions in `biomni/tool/XXX.py`, organized by subject area.
 
 **Steps:**
-1. **Implement and test** your function locally
-2. **Choose the appropriate subject** category
+1. **Implement and test** your function locally. If it requires additional software, create installation script and append it into `biomni_env/new_software_{VERSION}.sh`
+
+2. **Choose the appropriate subject** category (e.g. database, biochemistry, etc.)
+
 3. **Create a tool description** in `biomni/tool/tool_description/XXX.py` following the existing format
 
    *Tip: Use this helper to auto-generate descriptions:*
@@ -28,16 +30,19 @@ Tools are implemented as Python functions in `biomni/tool/XXX.py`, organized by 
    llm = get_llm('claude-sonnet-4-20250514')
    desc = function_to_api_schema(function_code, llm)
    ```
-
 4. **Create a test prompt** that uses your tool and verify the agent works correctly
 5. **Submit a pull request** for review, don't forget to include your test prompt as well
 
 ### 📊 Adding New Data
 
-**Requirements:**
-- Data must not overlap with existing datasets
-- Must have proper redistribution rights
-- Accessible download link required
+If the data source has web API, follow this process:
+
+**Steps:**
+1. **Verify uniqueness** - ensure no overlap with existing data
+2. **Prepare download link** with verified redistribution rights
+3. **Add a new query_XX function** to `biomni/tool/database.py`, follow the format from the other functions.
+
+If the data source has no API access, follow the below process:
 
 **Steps:**
 1. **Verify uniqueness** - ensure no overlap with existing data
@@ -45,11 +50,13 @@ Tools are implemented as Python functions in `biomni/tool/XXX.py`, organized by 
 3. **Add entry** to `data_lake_dict` in `biomni/env_desc.py`
 4. **Submit a pull request** with the download link
 
+Then, make a PR.
+
 ### 💻 Adding New Software
 
 **Steps:**
 1. **Test locally** to ensure no conflicts with existing environments
-2. **Create installation script** as a bash file
+2. **Create installation script** and append it into `biomni_env/new_software_{VERSION}.sh`
 3. **Add entry** to `library_content_dict` in `biomni/env_desc.py`
 4. **Submit a pull request** including:
    - Installation bash script
@@ -92,6 +99,8 @@ class YourBenchmark:
 ### 🐛 Bug Fixes & Enhancements
 
 We welcome all bug fixes and enhancements to the existing codebase!
+
+**Create an issue to discuss with the Biomni team first.**
 
 **Guidelines:**
 - Clearly describe the issue or enhancement

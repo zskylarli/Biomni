@@ -13,10 +13,10 @@ def annotate_celltype_scRNA(
     adata_filename,
     data_dir,
     data_info,
+    data_lake_path,
     cluster="leiden",
     llm="claude-3-5-sonnet-20241022",
     composition=None,
-    DATA_LAKE="/dfs/project/bioagentos/data_lake",
 ):
     """Annotate cell types based on gene markers and transferred labels using LLM.
     After leiden clustering, annotate clusters using differentially expressed genes
@@ -27,9 +27,9 @@ def annotate_celltype_scRNA(
     - adata_filename (str): Name of the AnnData file containing scRNA-seq data
     - data_dir (str): Directory containing the data files
     - data_info (str): Information about the scRNA-seq data (e.g., "homo sapiens, brain tissue, normal")
+    - data_lake_path (str): Path to the data lake
     - llm (str): Language model instance for cell type prediction, such as 'claude-3-haiku-20240307'
     - composition (pd.DataFrame, optional): Transferred cell type composition for each cluster
-    - DATA_LAKE (str): Path to the data lake
     Returns:
     - str: Steps performed and file paths where results were saved
 
@@ -71,7 +71,8 @@ def annotate_celltype_scRNA(
         markers[i] = list(np.array(gene_names)[np.array(gene_scores) > 0])
 
     # TODO: this can be optimized
-    df = pd.read_csv(f"{DATA_LAKE}/czi_census_datasets_v4.csv")
+    czi_celltype_path = data_lake_path + "/czi_census_datasets_v4.parquet"
+    df = pd.read_parquet(czi_celltype_path)
     czi_celltype_set = {cell_type.strip() for cell_types in df["cell_type"] for cell_type in str(cell_types).split(";")}
     czi_celltype = ", ".join(sorted(czi_celltype_set))
 
