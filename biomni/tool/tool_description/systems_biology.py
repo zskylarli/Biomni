@@ -218,9 +218,14 @@ description = [
     },
     {
         "description": "Answer functions and properties questions for DNA sequences ",
-        "name": "chatnt_call",
+        "name": "query_chatnt",
         "optional_parameters": [
-            {"default": "A", "description": "DNA sequence with potential functions", "name": "sequence", "type": "str"}
+            {
+                "default": -1,
+                "description": "Device to use for the ChatNT model. Default is -1 (CPU).",
+                "name": "device",
+                "type": "int",
+            }
         ],
         "required_parameters": [
             {"default": "A", "description": "Questions about the DNA sequence", "name": "question", "type": "str"},

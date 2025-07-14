@@ -1,7 +1,25 @@
-def chatnt_call(question, sequence):
+def query_chatnt(question, sequence, device=-1):
+    """
+    Call ChatNT to answer a question about a DNA sequence.
+
+    Parameters:
+    -----------
+    question : str
+        Question to ask about the DNA sequence
+    sequence : str
+        DNA sequence to analyze
+    device : int, optional
+        Device to use for the ChatNT model. Default is -1 (CPU).
+
+    Returns:
+    --------
+    str
+        Answer to the question
+    """
+    import torch
     from transformers import pipeline
 
-    pipe = pipeline(model="InstaDeepAI/ChatNT", trust_remote_code=True)
+    pipe = pipeline(model="InstaDeepAI/ChatNT", trust_remote_code=True, device=device)
 
     # Define custom inputs (note that the number of <DNA> token in the english sequence must be equal to len(dna_sequences))
     english_sequence = f"{question} <DNA> ?"
