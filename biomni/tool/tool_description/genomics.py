@@ -77,8 +77,8 @@ description = [
                 "type": "bool",
             },
             {
-                "default": "./panhumanpy_results",
-                "description": "Directory to save results and visualizations",
+                "default": "./output",
+                "description": "Directory to save results",
                 "name": "output_dir",
                 "type": "str",
             },
