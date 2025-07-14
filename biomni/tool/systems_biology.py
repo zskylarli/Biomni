@@ -728,7 +728,7 @@ def compare_protein_structures(pdb_file1, pdb_file2, chain_id1="A", chain_id2="A
     # Identify regions with continuous changes
     regions = []
     current_region = []
-    
+
     for res_id, _, distance in significant_changes:
         if not current_region or res_id == current_region[-1][0] + 1:
             current_region.append((res_id, distance))
