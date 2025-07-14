@@ -131,7 +131,7 @@ description = [
                 "description": "Path to the data lake",
                 "name": "data_lake_path",
                 "type": "str",
-            }
+            },
         ],
     },
     {
