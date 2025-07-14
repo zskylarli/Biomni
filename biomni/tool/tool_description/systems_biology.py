@@ -66,18 +66,8 @@ description = [
         "and analyze their responses to perturbations.",
         "name": "simulate_metabolic_network_perturbation",
         "optional_parameters": [
-            {
-                "default": 100,
-                "description": "Total simulation time",
-                "name": "simulation_time",
-                "type": "float",
-            },
-            {
-                "default": 1000,
-                "description": "Number of time points to simulate",
-                "name": "time_points",
-                "type": "int",
-            },
+            {"default": 100, "description": "Total simulation time", "name": "simulation_time", "type": "float"},
+            {"default": 1000, "description": "Number of time points to simulate", "name": "time_points", "type": "int"},
         ],
         "required_parameters": [
             {
@@ -182,18 +172,8 @@ description = [
             },
         ],
         "required_parameters": [
-            {
-                "default": None,
-                "description": "Path to the first PDB file",
-                "name": "pdb_file1",
-                "type": "str",
-            },
-            {
-                "default": None,
-                "description": "Path to the second PDB file",
-                "name": "pdb_file2",
-                "type": "str",
-            },
+            {"default": None, "description": "Path to the first PDB file", "name": "pdb_file1", "type": "str"},
+            {"default": None, "description": "Path to the second PDB file", "name": "pdb_file2", "type": "str"},
         ],
     },
     {
@@ -206,12 +186,7 @@ description = [
                 "name": "simulation_time",
                 "type": "float",
             },
-            {
-                "default": 100,
-                "description": "Number of time points to evaluate",
-                "name": "time_points",
-                "type": "int",
-            },
+            {"default": 100, "description": "Number of time points to evaluate", "name": "time_points", "type": "int"},
         ],
         "required_parameters": [
             {
@@ -239,6 +214,22 @@ description = [
                 "name": "feedback_params",
                 "type": "dict",
             },
+        ],
+    },
+    {
+        "description": "Answer functions and properties questions for DNA sequences ",
+        "name": "query_chatnt",
+        "optional_parameters": [
+            {
+                "default": -1,
+                "description": "Device to use for the ChatNT model. Default is -1 (CPU).",
+                "name": "device",
+                "type": "int",
+            }
+        ],
+        "required_parameters": [
+            {"default": "A", "description": "Questions about the DNA sequence", "name": "question", "type": "str"},
+            {"default": "A", "description": "DNA sequence with potential functions", "name": "sequence", "type": "str"},
         ],
     },
 ]

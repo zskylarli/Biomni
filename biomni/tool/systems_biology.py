@@ -1,11 +1,45 @@
+def query_chatnt(question, sequence, device=-1):
+    """
+    Call ChatNT to answer a question about a DNA sequence.
+
+    Parameters:
+    -----------
+    question : str
+        Question to ask about the DNA sequence
+    sequence : str
+        DNA sequence to analyze
+    device : int, optional
+        Device to use for the ChatNT model. Default is -1 (CPU).
+
+    Returns:
+    --------
+    str
+        Answer to the question
+    """
+    import torch
+    from transformers import pipeline
+
+    pipe = pipeline(model="InstaDeepAI/ChatNT", trust_remote_code=True, device=device)
+
+    # Define custom inputs (note that the number of <DNA> token in the english sequence must be equal to len(dna_sequences))
+    english_sequence = f"{question} <DNA> ?"
+    dna_sequences = [sequence]
+
+    # Generate sequence
+    generated_english_sequence = pipe(inputs={"english_sequence": english_sequence, "dna_sequences": dna_sequences})
+
+    return generated_english_sequence
+
+
 def perform_flux_balance_analysis(model_file, constraints=None, objective_reaction=None, output_file="fba_results.csv"):
-    """Perform Flux Balance Analysis (FBA) on a genome-scale metabolic network model.
+    """
+    Perform Flux Balance Analysis (FBA) on a genome-scale metabolic network model.
 
     FBA is a computational technique that predicts metabolic flux distributions
     by formulating and solving a linear optimization problem.
 
-    Parameters
-    ----------
+    Parameters:
+    -----------
     model_file : str
         Path to the metabolic model file (SBML or JSON format)
     constraints : dict, optional
@@ -17,12 +51,13 @@ def perform_flux_balance_analysis(model_file, constraints=None, objective_reacti
     output_file : str, optional
         File name to save the flux distribution results
 
-    Returns
-    -------
+    Returns:
+    --------
     str
         Research log summarizing the FBA process and results
-
     """
+    import os
+
     import cobra
     import pandas as pd
 
@@ -32,7 +67,7 @@ def perform_flux_balance_analysis(model_file, constraints=None, objective_reacti
     # Step 1: Load the metabolic network model
     log += "## Step 1: Loading metabolic model\n"
     try:
-        if model_file.endswith((".xml", ".sbml")):
+        if model_file.endswith(".xml") or model_file.endswith(".sbml"):
             model = cobra.io.read_sbml_model(model_file)
         elif model_file.endswith(".json"):
             model = cobra.io.load_json_model(model_file)
@@ -115,10 +150,11 @@ def perform_flux_balance_analysis(model_file, constraints=None, objective_reacti
 
 
 def model_protein_dimerization_network(monomer_concentrations, dimerization_affinities, network_topology):
-    """Model protein dimerization networks to find equilibrium concentrations of dimers.
+    """
+    Model protein dimerization networks to find equilibrium concentrations of dimers.
 
-    Parameters
-    ----------
+    Parameters:
+    -----------
     monomer_concentrations : dict
         Dictionary mapping monomer names to their initial concentrations (in arbitrary units)
     dimerization_affinities : dict
@@ -126,11 +162,10 @@ def model_protein_dimerization_network(monomer_concentrations, dimerization_affi
     network_topology : list of tuples
         List of (monomer1, monomer2) pairs that can form dimers
 
-    Returns
-    -------
+    Returns:
+    --------
     str
         Research log summarizing the modeling process and results
-
     """
     import time
 
@@ -259,16 +294,13 @@ def model_protein_dimerization_network(monomer_concentrations, dimerization_affi
 
 
 def simulate_metabolic_network_perturbation(
-    model_file,
-    initial_concentrations,
-    perturbation_params,
-    simulation_time=100,
-    time_points=1000,
+    model_file, initial_concentrations, perturbation_params, simulation_time=100, time_points=1000
 ):
-    """Construct and simulate kinetic models of metabolic networks and analyze their responses to perturbations.
+    """
+    Construct and simulate kinetic models of metabolic networks and analyze their responses to perturbations.
 
-    Parameters
-    ----------
+    Parameters:
+    -----------
     model_file : str
         Path to the COBRA model file (SBML format)
     initial_concentrations : dict
@@ -283,12 +315,13 @@ def simulate_metabolic_network_perturbation(
     time_points : int, optional
         Number of time points to simulate (default: 1000)
 
-    Returns
-    -------
+    Returns:
+    --------
     str
         Research log summarizing the steps taken and results obtained
-
     """
+    import os
+
     import cobra
     import numpy as np
     import pandas as pd
@@ -428,16 +461,13 @@ def simulate_metabolic_network_perturbation(
 
 
 def simulate_protein_signaling_network(
-    network_structure,
-    reaction_params,
-    species_params,
-    simulation_time=100,
-    time_points=1000,
+    network_structure, reaction_params, species_params, simulation_time=100, time_points=1000
 ):
-    """Simulate protein signaling network dynamics using ODE-based logic modeling with normalized Hill functions.
+    """
+    Simulate protein signaling network dynamics using ODE-based logic modeling with normalized Hill functions.
 
-    Parameters
-    ----------
+    Parameters:
+    -----------
     network_structure : dict
         Dictionary defining the network topology. Each key is a target protein and its value is a list of tuples
         (regulator, regulation_type) where regulation_type is 1 for activation and -1 for inhibition.
@@ -456,11 +486,10 @@ def simulate_protein_signaling_network(
     time_points : int, optional
         Number of time points for the simulation. Default is 1000.
 
-    Returns
-    -------
+    Returns:
+    --------
     str
         Research log summarizing the simulation process and results.
-
     """
     import csv
 
@@ -469,7 +498,7 @@ def simulate_protein_signaling_network(
 
     # Extract all unique protein species
     all_proteins = set(network_structure.keys())
-    for regulators in network_structure.values():
+    for _target, regulators in network_structure.items():
         for regulator, _ in regulators:
             all_proteins.add(regulator)
 
@@ -576,17 +605,12 @@ def simulate_protein_signaling_network(
     return log
 
 
-def compare_protein_structures(
-    pdb_file1,
-    pdb_file2,
-    chain_id1="A",
-    chain_id2="A",
-    output_prefix="protein_comparison",
-):
-    """Compares two protein structures to identify structural differences and conformational changes.
+def compare_protein_structures(pdb_file1, pdb_file2, chain_id1="A", chain_id2="A", output_prefix="protein_comparison"):
+    """
+    Compares two protein structures to identify structural differences and conformational changes.
 
-    Parameters
-    ----------
+    Parameters:
+    -----------
     pdb_file1 : str
         Path to the first PDB file
     pdb_file2 : str
@@ -598,12 +622,12 @@ def compare_protein_structures(
     output_prefix : str, optional
         Prefix for output files (default: "protein_comparison")
 
-    Returns
-    -------
+    Returns:
+    --------
     str
         A research log summarizing the structural comparison analysis
-
     """
+    import os
     import warnings
 
     import numpy as np
@@ -753,16 +777,13 @@ def compare_protein_structures(
 
 
 def simulate_renin_angiotensin_system_dynamics(
-    initial_concentrations,
-    rate_constants,
-    feedback_params,
-    simulation_time=48,
-    time_points=100,
+    initial_concentrations, rate_constants, feedback_params, simulation_time=48, time_points=100
 ):
-    """Simulate the time-dependent concentrations of renin-angiotensin system (RAS) components.
+    """
+    Simulate the time-dependent concentrations of renin-angiotensin system (RAS) components.
 
-    Parameters
-    ----------
+    Parameters:
+    -----------
     initial_concentrations : dict
         Initial concentrations of RAS components with keys:
         'renin', 'angiotensinogen', 'angiotensin_I', 'angiotensin_II',
@@ -784,12 +805,13 @@ def simulate_renin_angiotensin_system_dynamics(
     time_points : int, optional
         Number of time points to evaluate (default: 100)
 
-    Returns
-    -------
+    Returns:
+    --------
     str
         Research log summarizing the simulation steps and results
-
     """
+    import os
+
     import numpy as np
     import pandas as pd
     from scipy.integrate import solve_ivp
