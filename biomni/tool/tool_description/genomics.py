@@ -23,7 +23,7 @@ description = [
                 "description": "Transferred cell type composition for each cluster",
                 "name": "composition",
                 "type": "pd.DataFrame",
-            }
+            },
         ],
         "required_parameters": [
             {
@@ -49,7 +49,7 @@ description = [
                 "description": "Path to the data lake",
                 "name": "data_lake_path",
                 "type": "str",
-            }
+            },
         ],
     },
     {
