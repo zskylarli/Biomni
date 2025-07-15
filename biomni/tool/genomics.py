@@ -211,7 +211,7 @@ def annotate_celltype_with_panhumanpy(
         return "\n".join(log)
     
     # Initialize AzimuthNN
-    log.append("\n## Initializing & annotating with Panhuman Azimuth Neural Network")
+    log.append("## Initializing & annotating with Panhuman Azimuth Neural Network")
     try:
         if feature_names_col is None:
             azimuth = ph.AzimuthNN(adata)
@@ -225,7 +225,7 @@ def annotate_celltype_with_panhumanpy(
     
     # Generate embeddings and UMAP if requested
     if umap:
-        log.append("\n## Generating ANN embeddings")
+        log.append("## Generating ANN embeddings")
         try:
             embeddings = azimuth.azimuth_embed()
         except Exception as e:
@@ -233,7 +233,7 @@ def annotate_celltype_with_panhumanpy(
             return "\n".join(log)
         
         # Generate UMAP
-        log.append("\n## Calculating UMAP")
+        log.append("## Calculating UMAP")
         try:
             umap_coords = azimuth.azimuth_umap()
             log.append(f"✓ Generated UMAP of ANN embeddings")
@@ -241,13 +241,13 @@ def annotate_celltype_with_panhumanpy(
             log.append(f"✗ Error generating UMAP: {str(e)}")
             return "\n".join(log)
     else:
-        log.append("\n## Skipping embeddings and UMAP generation")
+        log.append("## Skipping embeddings and UMAP generation")
         embeddings = None
         umap = None
     
     # Label refinement (optional)
     if refine:
-        log.append("\n## Performing label refinement")
+        log.append("## Performing label refinement")
         try:
             azimuth.azimuth_refine()
             cell_metadata = azimuth.cells_meta
@@ -260,7 +260,7 @@ def annotate_celltype_with_panhumanpy(
             log.append(f"✗ Error during label refinement: {str(e)}")
     
     # Step 6: Save results
-    log.append("\n## Saving results")
+    log.append("## Saving results")
     try:
         # Save cell metadata
         metadata_file = f"{output_dir}/annotated_cell_metadata.csv"
