@@ -144,6 +144,153 @@ No numbers before name or spaces before number.
 
     return "\n".join(steps)
 
+def annotate_celltype_with_panhumanpy(
+    adata_path,
+    feature_names_col=None,
+    refine=True,
+    umap=True,
+    output_dir="./output",
+):
+    """Perform hierarchical cell type annotation using panhumanpy and Azimuth Neural Network.
+    
+    This function implements the panhumanpy workflow for cell type annotation using the
+    Azimuth Neural Network, providing hierarchical cell type labels with confidence scores.
+    
+    Parameters
+    ----------
+    adata_path : str
+        Path to the AnnData file containing scRNA-seq data
+    feature_names_col : str, optional
+        Column name in adata.var containing gene names (default: None, uses index)
+    refine : bool, optional
+        Whether to perform label refinement for consistent granularity (default: True)
+    umap : bool, optional
+        Whether to generate ANN embeddings and UMAP (default: True)
+    output_dir : str, optional
+        Directory to save results (default: "./output")
+    
+    Returns
+    -------
+    str
+        Research log summarizing the analysis steps and results
+    
+    Notes
+    -----
+    Performance is not ensured for diseased and/or non-human cells.
+    """
+    # https://github.com/satijalab/panhumanpy
+    import panhumanpy as ph
+    
+    # Create output directory
+    os.makedirs(output_dir, exist_ok=True)
+    
+    # Initialize research log
+    log = []
+    log.append("# Performing cell type annotation with Panhuman Azimuth")
+    
+    # Load the data
+    try:
+        log.append(f"Loading object from: {adata_path}")
+        
+        adata = sc.read_h5ad(adata_path)
+        log.append(f"✓ Successfully loaded object with {adata.n_obs} cells and {adata.n_vars} genes")
+        
+        # Check gene names in var
+        if feature_names_col is None:
+            log.append("Using gene names from adata.var.index")
+        else:
+            log.append(f"Using gene names from column: {feature_names_col}")
+            if feature_names_col not in adata.var.columns:
+                log.append(f"⚠ Warning: Column '{feature_names_col}' not found in adata.var")
+                log.append(f"Available columns: {list(adata.var.columns)}")
+                log.append("Falling back to index")
+                feature_names_col = None
+        
+    except Exception as e:
+        log.append(f"✗ Error loading data: {str(e)}")
+        return "\n".join(log)
+    
+    # Initialize AzimuthNN
+    log.append("## Initializing & annotating with Panhuman Azimuth Neural Network")
+    try:
+        if feature_names_col is None:
+            azimuth = ph.AzimuthNN(adata)
+        else:
+            azimuth = ph.AzimuthNN(adata, feature_names_col=feature_names_col)
+        cell_metadata = azimuth.cells_meta
+        log.append("✓ Successfully annotated all cells")
+    except Exception as e:
+        log.append(f"✗ Error initializing AzimuthNN: {str(e)}, please check if panhumanpy is installed correctly.")
+        return "\n".join(log)
+    
+    # Generate embeddings and UMAP if requested
+    if umap:
+        log.append("## Generating ANN embeddings")
+        try:
+            embeddings = azimuth.azimuth_embed()
+        except Exception as e:
+            log.append(f"✗ Error generating embeddings: {str(e)}")
+            return "\n".join(log)
+        
+        # Generate UMAP
+        log.append("## Calculating UMAP")
+        try:
+            umap_coords = azimuth.azimuth_umap()
+            log.append(f"✓ Generated UMAP of ANN embeddings")
+        except Exception as e:
+            log.append(f"✗ Error generating UMAP: {str(e)}")
+            return "\n".join(log)
+    else:
+        log.append("## Skipping embeddings and UMAP generation")
+        embeddings = None
+        umap = None
+    
+    # Label refinement (optional)
+    if refine:
+        log.append("## Performing label refinement")
+        try:
+            azimuth.azimuth_refine()
+            cell_metadata = azimuth.cells_meta
+            
+            # Check for refined labels
+            refined_columns = [col for col in cell_metadata.columns if col.startswith('azimuth_')]
+            log.append(f"✓ Applied label refinement, results are in columns: {refined_columns}")
+            
+        except Exception as e:
+            log.append(f"✗ Error during label refinement: {str(e)}")
+    
+    # Step 6: Save results
+    log.append("## Saving results")
+    try:
+        # Save cell metadata
+        metadata_file = f"{output_dir}/annotated_cell_metadata.csv"
+        cell_metadata.to_csv(metadata_file)
+        log.append(f"✓ Saved cell metadata to: {metadata_file}")
+        
+        # Save embeddings and UMAP if they were generated
+        if umap and embeddings is not None:
+            embeddings_file = f"{output_dir}/ann_embeddings.npy"
+            np.save(embeddings_file, embeddings)
+            log.append(f"✓ Saved embeddings to: {embeddings_file}")
+            
+            umap_file = f"{output_dir}/ann_umap.npy"
+            np.save(umap_file, umap)
+            log.append(f"✓ Saved UMAP to: {umap_file}")
+        else:
+            log.append("Skipped saving embeddings and UMAP (umap=False)")
+        
+        # Pack and save annotated object
+        annotated_save_path = f"{output_dir}/annotated_obj.h5ad"
+        annotated_query = azimuth.pack_adata(save_path=annotated_save_path)
+        log.append(f"✓ Saved annotated object to: {annotated_save_path}")
+        
+    except Exception as e:
+        log.append(f"✗ Error saving results: {str(e)}")
+        return "\n".join(log)
+    
+    log.append(f"- All results saved to: {output_dir}")
+    
+    return "\n".join(log)
 
 # === Integration ===
 

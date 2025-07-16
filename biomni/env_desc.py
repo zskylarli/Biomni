@@ -111,6 +111,7 @@ library_content_dict = {
     "pyfaidx": "[Python Package] A Python package for efficient random access to FASTA files.",
     "pyranges": "[Python Package] A Python package for interval manipulation with a pandas-like interface.",
     "pybedtools": "[Python Package] A Python wrapper for Aaron Quinlan's BEDTools programs.",
+    # "panhumanpy": "A Python package for hierarchical, cross-tissue cell type annotation of human single-cell RNA-seq data",
     # Structural Biology & Drug Discovery (Python)
     "rdkit": "[Python Package] A collection of cheminformatics and machine learning tools for working with chemical structures and drug discovery.",
     "deeppurpose": "[Python Package] A deep learning library for drug-target interaction prediction and virtual screening.",
