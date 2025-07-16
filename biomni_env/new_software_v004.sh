@@ -5,4 +5,4 @@
 # Installing panhumanpy
 echo -e "Installing panhumanpy..."
 pip install git+https://github.com/satijalab/panhumanpy.git
-echo -e "panhumanpy installation via Git is complete." 
+echo -e "panhumanpy installation via Git is complete."
