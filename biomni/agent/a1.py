@@ -1001,8 +1001,8 @@ Each library is listed with its description to help you understand its functiona
                 else:
                     # Try to correct it
                     state["messages"].append(
-                        AIMessage(
-                            content="There are no tags (e.g. <execute><solution>). Please follow the instruction, fix and update."
+                        HumanMessage(
+                            content="Each response must include thinking process followed by either <execute> or <solution> tag. But there are no tags in the current response. Please follow the instruction, fix and regenerate the response again."
                         )
                     )
                     state["next_step"] = "generate"
