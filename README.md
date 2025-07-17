@@ -58,6 +58,8 @@ Lastly, configure your API keys in bash profile `~/.bashrc`:
 ```bash
 export ANTHROPIC_API_KEY="YOUR_API_KEY"
 export OPENAI_API_KEY="YOUR_API_KEY" # optional if you just use Claude
+export AWS_BEARER_TOKEN_BEDROCK="YOUR_BEDROCK_API_KEY" # optional for AWS Bedrock models
+export AWS_REGION="us-east-1" # optional, defaults to us-east-1 for Bedrock
 ```
 
 ### Basic Usage
@@ -127,7 +129,8 @@ Experience Biomni through our no-code web interface at **[biomni.stanford.edu](h
 - [ ] A tutorial on baseline agents
 - [x] Biomni A1+E1 release
 
-## Note
+## Important Note
+- Security warning: Currently, Biomni executes LLM-generated code with full system privileges. If you want to use it in production, please use in isolated/sandboxed environments. The agent can access files, network, and system commands. Be careful with sensitive data or credentials.
 - This release was frozen as of April 15 2025, so it differs from the current web platform.
 - Biomni itself is Apache 2.0-licensed, but certain integrated tools, databases, or software may carry more restrictive commercial licenses. Review each component carefully before any commercial use.
 

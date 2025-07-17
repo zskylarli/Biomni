@@ -1,3 +1,1 @@
-#!/bin/bash
-
-# Assuming biomni_e1 environment is activated
+pip install transformers sentencepiece langchain-google-genai langchain_ollama
