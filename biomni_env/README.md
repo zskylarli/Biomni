@@ -21,6 +21,12 @@ conda env create -f environment.yml
 bash setup.sh
 ```
 
+If you already installed the base version, and just wants to add the additional packages in the new release, you can simply do:
+
+```bash
+bash new_software_v004.sh
+```
+
 Note: we have only tested this setup.sh script with Ubuntu 22.04, 64 bit.
 
 
